@@ -1,0 +1,8 @@
+export("a_metabolite", "a_protein", "aliquot", "all_pathways", "cols", "cols_p_m", "cols_p_p", "cols_t_m",
+       "cols_t_p", "data", "data_opts", "databases", "dict", "entrez", "file_plasma", "file_tissue",
+       "fls", "hmdb_to_kegg", "HMDB2KEGG", "Individual_ID", "layers", "mat", "met_FUvsBL", "met_FUvsREC",
+       "met_FUvsREC_BL", "met_RECvsBL", "met_TvsN", "metabolites", "metadata_df", "metMap", "model_opts",
+       "MOFA", "MOFA_trained", "pathways", "patients", "prot_FUvsBL", "prot_FUvsREC", "prot_FUvsREC_BL",
+       "prot_RECvsBL", "prot_TvsN", "reaction_network", "rem", "rN", "samp", "samples", "se_plasma",
+       "se_plasma_m", "se_plasma_p", "se_tissue", "se_tissue_m", "se_tissue_p", "symbol", "SYMBOL2KEGG",
+       "tmp", "train_opts")

@@ -3,31 +3,35 @@
 #' @title Create list of Spectra object(s) 
 #' 
 #' @description 
-#' The function `createListOfSpectra` returns a list of `Spectra` objects.
+#' The function \code{createListOfSpectra} returns a list of \code{Spectra} 
+#' objects.
 #' 
-#' When `type == "MetIDQ"`, the function will return a list of length 2. The 
-#' first entry contains a `Spectra` object with all features found in the 
-#' experiment files. The second entry contains a `Spectra` object with the
-#' features found in the experiment files that have available information on 
+#' When \code{type == "MetIDQ"}, the function will return a list of length 2. 
+#' The first entry contains a \code{Spectra} object with all features found in 
+#' the experiment files. The second entry contains a \code{Spectra} object with 
+#' the features found in the experiment files that have available information on 
 #' their retention time.
 #' 
-#' When `type == "mzML"`, the function will return a lit of length 1. The
-#' entry contains a `Spectra` object derived from all mzML files in `path`.
+#' When \code{type == "mzML"}, the function will return a lit of length 1. The
+#' entry contains a \code{Spectra} object derived from all mzML files in 
+#' \code{path}.
 #' 
 #' @details  
-#' When `type == "MetIDQ"`, the argument `rt` can be passed to the function.
-#' `rt` has to be a `SummarizedExperiment` object containing retention 
-#' time values in the assay slot. By default, `createListOfSpectra` loads
+#' When \code{type == "MetIDQ"}, the argument \code{rt} can be passed to the 
+#' function. \code{rt} has to be a \code{SummarizedExperiment} object 
+#' containing retention time values in the assay slot. By default, 
+#' \code{createListOfSpectra} loads
 #' an in-house library of retention time values from the metabolites of the
 #' Biocrates MxP Quant 500 kit that are separated by liquid chromatography. 
 #' 
-#' @param type `character`, either "MetIDQ" or "mzML"
-#' @param ... arguments passed to `createListOfSummarizedExperimentFromMetIDQ`
-#' or `createSpectraFromMzML`, for instance `path`
+#' @param type \code{character}, either \code{"MetIDQ"} or \code{"mzML"}
+#' @param ... arguments passed to 
+#' \code{createListOfSummarizedExperimentFromMetIDQ}
+#' or \code{createSpectraFromMzML}, for instance \code{path}
 #' 
 #' @author Thomas Naake 
 #' 
-#' @return list of `SummarizedExperiment` object(s)
+#' @return list of \code{Spectra} object(s)
 #' 
 #' @importFrom ProtGenerics rtime
 #' 
@@ -40,7 +44,6 @@
 #' path <- system.file("sciex", package = "msdata")
 #' createListOfSpectra(type = "mzML", path = path)
 #' 
-#' createListOfSpectra
 createListOfSpectra <- function(type = c("MetIDQ", "mzML"), ...) {
     
     type <- match.arg(type)

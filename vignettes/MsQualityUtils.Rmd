@@ -1,0 +1,190 @@
+---
+title: "MsQualityUtils: Creation of MsExperiment objects for MsQuality-based QC metric calculation"
+author:
+ - name: Thomas Naake
+   mail: thomas.naake@embl.de, thomasnaake@googlemail.com
+   affiliation: European Molecular Biology Laboratory, Meyerhofstrasse 1, 69117 Heidelberg
+package: MsQualityUtils
+      
+output:  
+    BiocStyle::html_document:
+        toc_float: true
+bibliography: MsQualityUtils-citations.bib
+vignette: >
+    %\VignetteIndexEntry{QC for metabolomics and proteomics data}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteKeywords{Mass Spectrometry, MS, Metabolomics, Proteomics, Visualization, QC}
+    %\VignettePackage{MsQualityUtils-vignette}
+    %\VignetteEncoding{UTF-8}
+---
+
+```{r style, echo = FALSE, results = 'asis'}
+BiocStyle::markdown()
+```
+
+```{r env, include=FALSE, echo=FALSE, cache=FALSE}
+library("knitr")
+opts_chunk$set(stop_on_error = 1L)
+suppressPackageStartupMessages(library("MsQuality"))
+suppressPackageStartupMessages(library("MsQualityUtils"))
+suppressPackageStartupMessages(library("Spectra"))
+```
+
+# Introduction {#sec-intro}
+
+Data quality assessment is an integral part of preparatory data analysis 
+to ensure sound biological information retrieval. 
+
+Data quality assessment is an integral part of preparatory data analysis 
+to ensure sound biological information retrieval. 
+
+We present here the `MsQualityUtils` package, which provides functionality to create
+`MsExperiment` objects from mzML and MetIDQ-derived files. 
+
+The `MsExperiment` files can subsequently be used to calculate quality metrics 
+at the per-sample level using the 
+[`MsQuality`](https://github.com/tnaake/MsQuality) package. 
+
+`MsQuality` relies on the [`mzQC`](https://github.com/HUPO-PSI/mzQC) 
+framework of quality metrics defined by the Human Proteome 
+Organization-Proteomics Standards Intitiative (HUPO-PSI). 
+
+The `MsQuality` package is built upon the `Spectra` and the `MsExperiment` package.
+Metrics will be calculated based on the information stored in a 
+`Spectra` object, thus, the spectral data of each sample should be stored
+in one `Spectra` object. The `MsExperiment` serves as a container to 
+store the mass spectral data of multiple samples. `MsQuality` enables the user
+to calculate quality metrics both on `Spectra` and `MsExperiment` objects. 
+The `MsQualityUtils` package provides functionality to create `MsExperiment` 
+objects that store the (spectral) information of mzML or MetIDQ files. 
+
+
+In this vignette, we will 
+(i) create an `MsExperiment` object from MetIDQ-derived mass spectrometry data  
+and (ii) create an `MsExperiment` object from mzML mass spectrometry data.
+
+# Installation
+
+To install `MsQualityUtils`, you have first to install the 
+[devtools](http://cran.r-project.org/web/packages/devtools/index.html) package: 
+
+```r
+install.packages("devtools")
+library("devtools")
+```
+
+Install the `MsQualityUtils` package then via
+```r
+install_github("tnaake/MsQualityUtils")
+```
+
+This will install this package and all eventually missing dependencies.
+
+# Questions and bugs {-}
+
+`MsQualityUtils` is currently under active development. If you discover any 
+bugs, typos or develop ideas of improving `MsQuality` feel free to raise an 
+issue via [GitHub](https://github.com/tnaake/MsQualityUtils) 
+or send a mail to the developer.
+
+# Prepare the environment
+
+Load the `Spectra`, the `MsExperiment` and the `MsQuality` package.
+
+```{r load_MsExperiment_Spectra}
+library("Spectra")
+library("MsExperiment")
+library("MsQuality")
+```
+
+# Create `MsExperiment` from MetIDQ files 
+
+First, we will create a list of `Spectra` objects. The list has two entries:
+
+ - the first entry contains all features found in the xlsx files (irrespective 
+   of their retentiont time),
+ - the second entry contains the features that are separated by a 
+   chromatographic method, these features have information on retention time
+   values.
+
+The function will create `Spectra` objects from all MetIDQ files that are 
+found in `path` (`createListOfSpectra` will combine all MetIDQ files found in
+`path`). 
+
+```{r sps_metidq}
+path <- system.file("metidq", package = "MsQualityUtils")
+sps_l <- createListOfSpectra(type = "MetIDQ", path = path, sheet = 1)
+```
+
+In a next step, we create a list of `MsExperiment` objects from the list of 
+`Spectra` objects. The first entry of the list contains the `MsExperiment` 
+object of features irrespective of their retention time. The second entry 
+contains the `MsExperiment` object of features that are separated by a
+chromatographic method, these features have information on retention 
+time values. 
+
+```{r msexp_metidq}
+msexp_metidq_l <- createListOfMsExperimentFromListOfSpectra(sps_l = sps_l)
+```
+
+
+# Create `MsExperiment` from mzML files
+
+Here, we load the example 
+files from the `sciex` data set of the `msdata` package and create a list 
+of one `Spectra` object from the two provided `mzML` files. The function
+will create a `Spectra` object containing all `mzML` files that are 
+found in the specified `path`.
+
+```{r sps_mzml}
+path <- system.file("sciex", package = "msdata")
+sps_l <- createListOfSpectra(type = "mzML", path = path)
+```
+
+In a next step, we calculate a list of one `MsExperiment` object from the 
+list of `Spectra` objects:
+```{r msexp_mzml}
+msexp_mzml_l <- createListOfMsExperimentFromListOfSpectra(sps_l = sps_l)
+```
+
+
+# Calculating the quality metrics on `MsExperiment` objects using `MsQuality`
+
+The objects from the `MsQualityUtils` functions can directly be used 
+by the `MsQuality` package.
+
+The function `calculateMetrics` will iterate over the samples (referring
+to rows in `sampleData(msexp))`) and calculate the quality metrics on the
+corresponding `Spectra` objects.
+
+```{r calculateMetrics}
+library("MsQuality")
+msexp_mzml <- msexp_mzml_l[[1]]
+metrics_msexp <- calculateMetrics(object = msexp_mzml,
+    metrics = qualityMetrics(msexp_mzml),
+    relativeTo = "Q1", msLevel = 1L)
+metrics_msexp
+```
+
+When passing an `MsExperiment` object to `calculateMetrics` a `data.frame`
+object is returned with the samples (derived from the rownames of 
+`sampleData(msexp)`) in the rows and the metrics in columns. 
+
+We will show here the objects `metrics_rplc_msexp` and `metrics_hilic_msexp`
+```{r paged_table_metrics, eval = TRUE, echo = FALSE}
+print("metrics_msexp")
+rmarkdown::paged_table(as.data.frame(metrics_msexp))
+```
+
+# Appendix {-}
+
+## Session information {-}
+
+All software and respective versions to build this vignette are listed here:
+
+```{r session,eval=TRUE, echo=FALSE}
+sessionInfo()
+```
+
+## References
+

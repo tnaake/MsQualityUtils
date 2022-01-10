@@ -26,6 +26,7 @@ Suggests:
 	BiocStyle (>= 2.6.1),
 	knitr (>= 1.11),
 	msdata (>= 0.32.0),
+	MsQuality (>= 0.99.1),
 	rmarkdown (>= 2.7),
 	testthat (>= 2.2.1)
 biocViews: Metabolomics, Proteomics, MassSpectrometry, QC

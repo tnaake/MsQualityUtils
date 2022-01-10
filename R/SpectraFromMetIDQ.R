@@ -22,7 +22,7 @@
 #' 
 #' @export
 #' @examples
-#' Retention_times_MetIDQ <- loadRt()
+#' rt <- loadRt()
 #' 
 loadRt <- function() {
     path <- system.file("metidq_rt", package = "MsQualityUtils")
@@ -171,7 +171,7 @@ createSpectraFromSummarizedExperiment <- function(se, rt) {
 #' @importFrom methods is
 #' 
 #' @examples
-#' #' ## create rt object
+#' ## create rt object
 #' rt <- loadRt()
 #' 
 #' ## create se object

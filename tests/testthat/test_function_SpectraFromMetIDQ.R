@@ -17,7 +17,7 @@ suppressWarnings(se_l <-
     createListOfSummarizedExperimentFromMetIDQ(path = path, sheet = 1))
 test_that("createListOfSummarizedExperimentFromMetIDQ", {
     expect_equal(length(se_l), 1)
-    expect_equal(is(se_l[[1]]), "SummarizedExperiment")
+    expect_is(se_l[[1]], "SummarizedExperiment")
     expect_equal(dim(se_l[[1]]), c(630, 86))
 }) 
 ## END unit createListOfSummarizedExperimentFromMetIDQ ## 

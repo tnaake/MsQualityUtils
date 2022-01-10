@@ -35,6 +35,8 @@
 #' 
 #' @importFrom ProtGenerics rtime
 #' 
+#' @export
+#' 
 #' @examples
 #' ## type == "MetIDQ"
 #' path <- system.file("metidq", package = "MsQualityUtils")
@@ -48,12 +50,15 @@ createListOfSpectra <- function(type = c("MetIDQ", "mzML"), ...) {
     
     type <- match.arg(type)
     
+    ## create a list from the ... arguments that is later passed to do.call
+    args <- list(...)
+    
     if (type == "MetIDQ") {
-        se_l <- createListOfSummarizedExperimentFromMetIDQ(path = path, 
-            sheet = sheet, ...)
+        
+        se_l <- do.call("createListOfSummarizedExperimentFromMetIDQ", args)
         
         ## load the rt file
-        if (!missing(rt))
+        if (!"rt" %in% names(args))
             rt <- loadRt()
         
         sps <- createSpectraFromMetIDQ(se_l = se_l, rt = rt)
@@ -67,7 +72,8 @@ createListOfSpectra <- function(type = c("MetIDQ", "mzML"), ...) {
     }
     
     if (type == "mzML") {
-        sps <- createSpectraFromMzML(path = path)
+        
+        sps <- do.call("createSpectraFromMzML", args)
         sps_l <- list(sps)
     }
     

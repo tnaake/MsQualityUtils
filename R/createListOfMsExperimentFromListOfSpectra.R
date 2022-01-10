@@ -24,7 +24,18 @@
 #' @importFrom MsExperiment MsExperiment `sampleData<-` sampleData `spectra<-` 
 #'     linkSampleData 
 #' 
+#' @export
+#' 
 #' @examples
+#' ## type == "MetIDQ"
+#' path <- system.file("metidq", package = "MsQualityUtils")
+#' sps_l <- createListOfSpectra(type = "MetIDQ", path = path, sheet = 1)
+#' createListOfMsExperimentFromListOfSpectra(sps_l = sps_l)
+#' 
+#' ## type == "mzML"
+#' path <- system.file("sciex", package = "msdata")
+#' sps_l <- createListOfSpectra(type = "mzML", path = path)
+#' createListOfMsExperimentFromListOfSpectra(sps_l = sps_l)
 #' 
 createListOfMsExperimentFromListOfSpectra <- function(sps_l) {
     

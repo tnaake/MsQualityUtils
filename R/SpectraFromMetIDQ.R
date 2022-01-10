@@ -20,11 +20,14 @@
 #'
 #' @return \code{SummarizedExperiment} object
 #' 
+#' @export
 #' @examples
 #' Retention_times_MetIDQ <- loadRt()
 #' 
 loadRt <- function() {
-    readRDS("Retention_times_MetIDQ.RDS")
+    path <- system.file("metidq_rt", package = "MsQualityUtils")
+    file <- paste(path, "Retention_times_MetIDQ.RDS", sep = "/")
+    readRDS(file)
 }
 
 
@@ -33,9 +36,11 @@ loadRt <- function() {
 #' @title Create list of SummarizedExperiment object from MetIDQ files
 #' 
 #' @description 
-#' Load the xlsx files and store them as a SummarizedExperiment object in a list.
+#' Load the xlsx files and store them as a SummarizedExperiment object in a 
+#' list.
 #' 
 #' @details 
+#' For each xlsx file found in path a new list entry will be created. 
 #' 
 #' @param path \code{character}
 #' @param sheet \code{character} or \code{numeric}, the name or index to read 
@@ -46,10 +51,13 @@ loadRt <- function() {
 #' 
 #' @importFrom MatrixQCvis biocrates
 #' 
+#' @export
+#' 
 #' @examples
 #' path <- system.file("metidq", package = "MsQualityUtils")
 #' createListOfSummarizedExperimentFromMetIDQ(path = path, sheet = 1)
-createListOfSummarizedExperimentFromMetIDQ <- function(path = "./", sheet = 1, ...) {
+createListOfSummarizedExperimentFromMetIDQ <- function(path = "./", 
+    sheet = 1, ...) {
     
     ## create an object that stores the experiments (each xlsx file is one 
     ## experiment)
@@ -61,8 +69,8 @@ createListOfSummarizedExperimentFromMetIDQ <- function(path = "./", sheet = 1, .
     ## iterate through the xlsx files and write the SummarizedExperiment objects
     ## to the list
     for (i in seq_along(experiments)) {
-        se_l[[i]] <- MatrixQCvis::biocrates(file = experiments[i], 
-            sheet = sheet, ...)
+        args <- list(file = experiments[i], sheet = sheet, ...)
+        se_l[[i]] <- do.call(MatrixQCvis::biocrates, args)
     }
     
     ## return the list
@@ -75,13 +83,17 @@ createListOfSummarizedExperimentFromMetIDQ <- function(path = "./", sheet = 1, .
 #' @title Create Spectra object from a SummarizedExperiment object
 #' 
 #' @description 
-#' Outer function to iterate through list of SummarizedExperiment objects.
+#' Function to create a \code{Spectra} object from a \code{SummarizedExperiment}
+#' object.
 #' 
 #' @details 
+#' The sample name (\code{colnames(se)}) is taken to create the 
+#' \code{dataOrigin} that is in down-stream functions used to distinguish the 
+#' origins of the resulting \code{Spectra}'s entries.
 #' 
-#' @param se \code{SummarizedExperiment}
-#' @param rt \code{SummarizedExperiment} containing the retention time in the 
-#' assay slot
+#' @param se \code{SummarizedExperiment} object
+#' @param rt \code{SummarizedExperiment} object containing the retention time 
+#' in the assay slot
 #' 
 #' @author Thomas Naake 
 #' 
@@ -89,8 +101,19 @@ createListOfSummarizedExperimentFromMetIDQ <- function(path = "./", sheet = 1, .
 #' @importFrom Spectra Spectra
 #' @importFrom S4Vectors DataFrame
 #' 
-#' @examples
+#' @export
 #' 
+#' @examples
+#' ## create rt object
+#' rt <- loadRt()
+#' 
+#' ## create se object
+#' path <- system.file("metidq", package = "MsQualityUtils")
+#' se_l <- createListOfSummarizedExperimentFromMetIDQ(path = path, sheet = 1)
+#' se <- se_l[[1]]
+#' 
+#' ## run createSpectraFromSummarizedExperiment
+#' createSpectraFromSummarizedExperiment(se = se, rt = rt)
 createSpectraFromSummarizedExperiment <- function(se, rt) {
     ## create the Spectra object from the SummarizedExperiment object
     a <- SummarizedExperiment::assay(se)
@@ -106,15 +129,20 @@ createSpectraFromSummarizedExperiment <- function(se, rt) {
         ## fake m/z values
         spd$mz <- lapply(seq_len(length(m_i)), function(x) x)
         
-        ## enter here the
+        ## create the intensity, rtime, precursorIntensity 
         spd$intensity <- lapply(seq_len(length(m_i)), 
                                 function(x) as.vector(m_i[x]))
         sps_i <- Spectra::Spectra(spd)
-        sps_i$rtime <- apply(assay(rt)[names(m_i), ], 1, mean, na.rm = TRUE)
+        sps_i$rtime <- apply(
+            SummarizedExperiment::assay(rt)[names(m_i), ], 1, mean, 
+            na.rm = TRUE)
         sps_i$precursorIntensity <- as.vector(m_i)
-        sps_i$dataOrigin <- rep(colnames(s)[i], length(names(m_i)))
+        ## for the dataOrigin take the sample name, taken from se
+        sps_i$dataOrigin <- rep(colnames(se)[i], length(names(m_i)))
+        
+        ## write the sps_i to the list sps
         sps[[i]] <- sps_i
-        names(sps)[i] <- colnames(s)[i]
+        names(sps)[i] <- colnames(se)[i]
     }
     sps <- Reduce(c, sps)
     sps
@@ -125,20 +153,37 @@ createSpectraFromSummarizedExperiment <- function(se, rt) {
 #' @title Create Spectra object from a list of SummarizedExperiment objects
 #' 
 #' @description 
+#' The function \code{createSpectraFromMetIDQ} will a \code{Spectra} object
+#' from list of \code{SummarizedExperiment} objects.
 #' 
 #' @details 
+#' \code{createSpectraFromMetIDQ} will stop if there are duplicate sample 
+#' names across the \code{SummarizedExperiment} objects.
 #' 
 #' @param se_l list of \code{SummarizedExperiment} objects
-#' @param rt
+#' @param rt \code{SummarizedExperiment} object containing the retention time 
+#' in the assay slot
 #' 
 #' @author Thomas Naake 
 #' 
-#' @examples
+#' @export
 #' 
+#' @importFrom methods is
+#' 
+#' @examples
+#' #' ## create rt object
+#' rt <- loadRt()
+#' 
+#' ## create se object
+#' path <- system.file("metidq", package = "MsQualityUtils")
+#' se_l <- createListOfSummarizedExperimentFromMetIDQ(path = path, sheet = 1)
+#' 
+#' ## run the createSpectraFromMetIDQ
+#' createSpectraFromMetIDQ(se_l = se_l, rt = rt)
 createSpectraFromMetIDQ <- function(se_l, rt) {
     
     ## first, check if all elements of se_l are SummarizedExperiment objects
-    .is <- lapply(se_l, function(x) is(x, "SummarizedExperiment"))
+    .is <- lapply(se_l, function(x) methods::is(x, "SummarizedExperiment"))
     if (!all(unlist(.is)))
         stop("se_l contains elements that are not 'SummarizedExperiment'")
     
@@ -150,15 +195,15 @@ createSpectraFromMetIDQ <- function(se_l, rt) {
     if (any(duplicated(sample_names))) 
         stop("duplicated sample names across experiments")
     
-    sps <- list()
+    sps_l <- list()
     ## create the Spectra from the individual SummarizedExperiment 
     ## objects stored in the list se_l and write to the entries of sps
     for (i in seq_along(se_l)) {
-        sps[[i]] <- createSpectraFromSummarizedExperiment(se_l[[i]], rt)
+        sps_l[[i]] <- createSpectraFromSummarizedExperiment(se_l[[i]], rt)
     }
     
-    ## collapse the Spectra object of sps_outer (sps_outer is a list)
-    sps <- Reduce(c, sps)
+    ## collapse the Spectra object of sps_l (sps_l is a list)
+    sps <- Reduce(c, sps_l)
     sps
 }
 

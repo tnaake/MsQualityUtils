@@ -19,6 +19,8 @@
 #' 
 #' @importFrom Spectra Spectra MsBackendMzR
 #' 
+#' @export
+#' 
 #' @examples
 #' path <- system.file("sciex", package = "msdata")
 #' createSpectraFromMzML(path = path)

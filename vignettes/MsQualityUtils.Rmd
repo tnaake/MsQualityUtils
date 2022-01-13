@@ -35,12 +35,9 @@ suppressPackageStartupMessages(library("Spectra"))
 Data quality assessment is an integral part of preparatory data analysis 
 to ensure sound biological information retrieval. 
 
-Data quality assessment is an integral part of preparatory data analysis 
-to ensure sound biological information retrieval. 
 
-We present here the `MsQualityUtils` package, which provides functionality to create
-`MsExperiment` objects from mzML and MetIDQ-derived files. 
-
+We present here the `MsQualityUtils` package, which provides functionality to 
+create `MsExperiment` objects from mzML and MetIDQ-derived files. 
 The `MsExperiment` files can subsequently be used to calculate quality metrics 
 at the per-sample level using the 
 [`MsQuality`](https://github.com/tnaake/MsQuality) package. 
@@ -57,7 +54,6 @@ store the mass spectral data of multiple samples. `MsQuality` enables the user
 to calculate quality metrics both on `Spectra` and `MsExperiment` objects. 
 The `MsQualityUtils` package provides functionality to create `MsExperiment` 
 objects that store the (spectral) information of mzML or MetIDQ files. 
-
 
 In this vignette, we will 
 (i) create an `MsExperiment` object from MetIDQ-derived mass spectrometry data  
@@ -98,6 +94,17 @@ library("MsQuality")
 ```
 
 # Create `MsExperiment` from MetIDQ files 
+
+MetIDQ$^{\mathrm{TM}}$ xlsx files are created by the Biocrates 
+MetIDQ$^{\mathrm{TM}}$. They store information on metabolite concentration
+in their cells. The `MsQualityUtils` package provides functionality to 
+retrieve the information stored in the MetIDQ$^{\mathrm{TM}}$ xlsx files
+and create `Spectra` objects from this. Typically, some of the measured 
+metabolites are separated by liquid chromatography. We can pass a
+`SummarizedExperiment` object `rt` to the function `` that stores 
+retention time values in the `assay` slot. If there is no object `rt` passed
+to the function, an internal `rt` object will be used and retention times
+are taken therefrom.
 
 First, we will create a list of `Spectra` objects. The list has two entries:
 

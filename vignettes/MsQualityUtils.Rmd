@@ -25,16 +25,12 @@ BiocStyle::markdown()
 ```{r env, include=FALSE, echo=FALSE, cache=FALSE}
 library("knitr")
 opts_chunk$set(stop_on_error = 1L)
-suppressPackageStartupMessages(library("MsQuality"))
-suppressPackageStartupMessages(library("MsQualityUtils"))
-suppressPackageStartupMessages(library("Spectra"))
 ```
 
 # Introduction {#sec-intro}
 
 Data quality assessment is an integral part of preparatory data analysis 
 to ensure sound biological information retrieval. 
-
 
 We present here the `MsQualityUtils` package, which provides functionality to 
 create `MsExperiment` objects from mzML and MetIDQ-derived files. 
@@ -64,13 +60,14 @@ and (ii) create an `MsExperiment` object from mzML mass spectrometry data.
 To install `MsQualityUtils`, you have first to install the 
 [devtools](http://cran.r-project.org/web/packages/devtools/index.html) package: 
 
-```r
+```{r install, eval = FALSE}
 install.packages("devtools")
 library("devtools")
 ```
 
 Install the `MsQualityUtils` package then via
-```r
+
+```{r install_github, eval = FALSE}
 install_github("tnaake/MsQualityUtils")
 ```
 
@@ -85,12 +82,10 @@ or send a mail to the developer.
 
 # Prepare the environment
 
-Load the `Spectra`, the `MsExperiment` and the `MsQuality` package.
+Load the `MsQualityUtils` package.
 
-```{r load_MsExperiment_Spectra}
-library("Spectra")
-library("MsExperiment")
-library("MsQuality")
+```{r load_packages}
+library("MsQualityUtils")
 ```
 
 # Create `MsExperiment` from MetIDQ files 
@@ -118,7 +113,11 @@ The function will create `Spectra` objects from all MetIDQ files that are
 found in `path` (`createListOfSpectra` will combine all MetIDQ files found in
 `path`). 
 
-```{r sps_metidq}
+The example file loaded is `ac9b02908_si_002` from the publication by
+@Thompson2019. The xlsx file was only slightly modified to be able to 
+be loaded by the `biocrates` function from the `MatrixQCvis` package. 
+
+```{r sps_metidq, eval=TRUE}
 path <- system.file("metidq", package = "MsQualityUtils")
 sps_l <- createListOfSpectra(type = "MetIDQ", path = path, sheet = 1)
 ```
@@ -130,7 +129,7 @@ contains the `MsExperiment` object of features that are separated by a
 chromatographic method, these features have information on retention 
 time values. 
 
-```{r msexp_metidq}
+```{r msexp_metidq, eval=F}
 msexp_metidq_l <- createListOfMsExperimentFromListOfSpectra(sps_l = sps_l)
 ```
 

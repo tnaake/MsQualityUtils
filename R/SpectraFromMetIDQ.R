@@ -9,8 +9,10 @@
 #' \code{Retention_times_MetIDQ} contains the retention time
 #' in seconds of the metabolites for the Biocrates MxP 500 Quant Kit measured 
 #' by the Metabolomics Core Technology Platorm, COS, University of Heidelberg
-#' (by Hagen Gegner).
-#' It will be used to create a \code{Spectra} list containing only the 
+#' (by Hagen Gegner). The mass spectrometry platform was a
+#' AB Sciex Triple Quad\code{^{TM}} 6500+ LC-MS/MS System.
+#' 
+#' The object will be used to create a \code{Spectra} object containing only the 
 #' metabolites that were separated by liquid chromatography.
 #' 
 #' @details 
@@ -21,9 +23,9 @@
 #' @return \code{SummarizedExperiment} object
 #' 
 #' @export
+#' 
 #' @examples
 #' rt <- loadRt()
-#' 
 loadRt <- function() {
     path <- system.file("metidq_rt", package = "MsQualityUtils")
     file <- paste(path, "Retention_times_MetIDQ.RDS", sep = "/")
@@ -61,7 +63,8 @@ createListOfSummarizedExperimentFromMetIDQ <- function(path = "./",
     
     ## create an object that stores the experiments (each xlsx file is one 
     ## experiment)
-    experiments <- list.files(path = path, pattern = ".xlsx", full.names = TRUE)
+    experiments <- list.files(path = path, pattern = ".xlsx", 
+        full.names = TRUE, recursive = FALSE)
     
     ## create an empty list
     se_l <- list()
@@ -91,6 +94,9 @@ createListOfSummarizedExperimentFromMetIDQ <- function(path = "./",
 #' \code{dataOrigin} that is in down-stream functions used to distinguish the 
 #' origins of the resulting \code{Spectra}'s entries.
 #' 
+#' The \code{Spectra} object only contains the the shared features between
+#' \code{se} and \code{rt}.
+#' 
 #' @param se \code{SummarizedExperiment} object
 #' @param rt \code{SummarizedExperiment} object containing the retention time 
 #' in the assay slot
@@ -115,6 +121,12 @@ createListOfSummarizedExperimentFromMetIDQ <- function(path = "./",
 #' ## run createSpectraFromSummarizedExperiment
 #' createSpectraFromSummarizedExperiment(se = se, rt = rt)
 createSpectraFromSummarizedExperiment <- function(se, rt) {
+    
+    ## define overlap between rt and se and truncate se and rt
+    sharedFeat <- intersect(rownames(se), rownames(rt))
+    se <- se[sharedFeat, ]
+    rt <- rt[sharedFeat, ]
+    
     ## create the Spectra object from the SummarizedExperiment object
     a <- SummarizedExperiment::assay(se)
     sps <- list()

@@ -31,12 +31,14 @@ entry contains a \code{Spectra} object derived from all mzML files in
 \code{path}.
 }
 \details{
-When \code{type == "MetIDQ"}, the argument \code{rt} can be passed to the 
+If \code{type == "MetIDQ"}, the argument \code{rt} can be passed to the 
 function. \code{rt} has to be a \code{SummarizedExperiment} object 
 containing retention time values in the assay slot. By default, 
 \code{createListOfSpectra} loads
 an in-house library of retention time values from the metabolites of the
-Biocrates MxP Quant 500 kit that are separated by liquid chromatography.
+Biocrates MxP Quant 500 kit that are separated by liquid chromatography. 
+The \code{Spectra} object only contains the the shared features between
+\code{se} and \code{rt}.
 }
 \examples{
 ## type == "MetIDQ"
@@ -46,7 +48,6 @@ createListOfSpectra(type = "MetIDQ", path = path, sheet = 1)
 ## type == "mzML"
 path <- system.file("sciex", package = "msdata")
 createListOfSpectra(type = "mzML", path = path)
-
 }
 \author{
 Thomas Naake

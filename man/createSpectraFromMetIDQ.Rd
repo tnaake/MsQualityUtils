@@ -21,7 +21,7 @@ from list of \code{SummarizedExperiment} objects.
 names across the \code{SummarizedExperiment} objects.
 }
 \examples{
-#' ## create rt object
+## create rt object
 rt <- loadRt()
 
 ## create se object

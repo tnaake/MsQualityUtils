@@ -7,7 +7,7 @@ test_that("loadRt", {
     expect_equal(
         as.vector(table(is.na(SummarizedExperiment::assay(rt)))), c(636, 3144))
     expect_equal(sum(SummarizedExperiment::assay(rt), na.rm = TRUE),
-        84937.56)
+        1415.626)
 })
 ## END unit test loadRt ## 
 
@@ -18,7 +18,7 @@ suppressWarnings(se_l <-
 test_that("createListOfSummarizedExperimentFromMetIDQ", {
     expect_equal(length(se_l), 1)
     expect_is(se_l[[1]], "SummarizedExperiment")
-    expect_equal(dim(se_l[[1]]), c(630, 86))
+    expect_equal(dim(se_l[[1]]), c(408, 504))
 }) 
 ## END unit createListOfSummarizedExperimentFromMetIDQ ## 
 
@@ -37,9 +37,9 @@ sps <- createSpectraFromSummarizedExperiment(se = se, rt = rt)
 
 test_that("createSpectraFromSummarizedExperiment", {
     expect_is(sps, "Spectra")
-    expect_equal(length(sps), 50903)
-    expect_equal(as.vector(table(is.na(sps$rtime))), c(8876, 42027))
-    expect_equal(length(unique(sps$dataOrigin)), 86)
+    expect_equal(length(sps), 22076)
+    expect_equal(as.vector(table(is.na(sps$rtime))), c(16525, 5551))
+    expect_equal(length(unique(sps$dataOrigin)), 504)
 })
 ## END unit test createSpectraFromSummarizedExperiment ##
 
@@ -58,8 +58,8 @@ sps <- createSpectraFromMetIDQ(se_l = se_l, rt = rt)
 
 test_that("createSpectraFromMetIDQ", {
     expect_is(sps, "Spectra")
-    expect_equal(length(sps), 50903)
-    expect_equal(as.vector(table(is.na(sps$rtime))), c(8876, 42027))
-    expect_equal(length(unique(sps$dataOrigin)), 86)
+    expect_equal(length(sps), 22076)
+    expect_equal(as.vector(table(is.na(sps$rtime))), c(16525, 5551))
+    expect_equal(length(unique(sps$dataOrigin)), 504)
 })
 ## END unit test createSpectraFromMetIDQ ##

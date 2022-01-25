@@ -17,18 +17,20 @@ test_that("createListOfMsExperimentFromListOfSpectra", {
     expect_true(is.list(msexp_metidq))
     expect_true(is.list(msexp_mzml))
     
-    expect_equal(length(MsExperiment::spectra(msexp_metidq[[1]])), 50903)
-    expect_equal(length(MsExperiment::spectra(msexp_metidq[[2]])), 8876)
+    expect_equal(length(MsExperiment::spectra(msexp_metidq[[1]])), 22076)
+    expect_equal(length(MsExperiment::spectra(msexp_metidq[[2]])), 16525)
     expect_equal(
         as.numeric(table(is.na(MsExperiment::spectra(msexp_metidq[[1]])$rtime))), 
-        c(8876, 42027))
+        c(16525, 5551))
     expect_equal(
         as.numeric(table(is.na(MsExperiment::spectra(msexp_metidq[[2]])$rtime))), 
-        8876)
+        16525)
     expect_equal(
-        length(unique(MsExperiment::spectra(msexp_metidq[[1]])$dataOrigin)), 86)
+        length(unique(MsExperiment::spectra(msexp_metidq[[1]])$dataOrigin)), 
+        504)
     expect_equal(
-        length(unique(MsExperiment::spectra(msexp_metidq[[2]])$dataOrigin)), 86)
+        length(unique(MsExperiment::spectra(msexp_metidq[[2]])$dataOrigin)), 
+        504)
     expect_equal(length(MsExperiment::spectra(msexp_mzml[[1]])), 1862)
     expect_equal(
         as.numeric(table(is.na(MsExperiment::spectra(msexp_mzml[[1]])$rtime))), 

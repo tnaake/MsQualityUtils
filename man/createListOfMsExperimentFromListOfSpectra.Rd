@@ -2,16 +2,22 @@
 % Please edit documentation in R/createListOfMsExperimentFromListOfSpectra.R
 \name{createListOfMsExperimentFromListOfSpectra}
 \alias{createListOfMsExperimentFromListOfSpectra}
-\title{Create list of MsExperiment objects from list of Spectra objects}
+\title{Create list of \code{MsExperiment} objects from list of 
+\code{Spectra} objects}
 \usage{
 createListOfMsExperimentFromListOfSpectra(sps_l)
 }
 \arguments{
-\item{sps_l}{\code{list} of \code{Spectra} objects}
+\item{sps_l}{\code{list} of one or multiple \code{Spectra} objects}
 }
 \description{
+The function \code{createListOfMsExperimentFromListOfSpectra} will 
+provide the input (after subsetting the resulting list) for the 
+\code{MsQuality} workflow for QC metric calculation.
+
 The function \code{createListOfMsExperimentFromListOfSpectra} returns a 
-list of \code{MsExperiment} objects.
+list of \code{MsExperiment} objects. It will take as input a list of 
+\code{Spectra} objects.
 }
 \details{
 When \code{type == "MetIDQ"}, the function will return a list of length 2. 

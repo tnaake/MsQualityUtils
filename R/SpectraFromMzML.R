@@ -38,10 +38,14 @@
 #' @export
 #' 
 #' @examples
+#' ## for non-SRM and non-MRM files
 #' path <- system.file("sciex", package = "msdata")
 #' createSpectraFromMzML(path = path)
+#' 
+#' ## for SRM and MRM files
+#' path <- system.file("srm", package = "MsQualityUtils")
+#' createSpectraFromMzML(path = path, type = "SRM")
 createSpectraFromMzML <- function(path = ".", type = "") {
-
     
     if (type %in% c("SRM", "MRM")) {
         sps <- createSpectraFromSrmOrMrmMzML(path)
@@ -90,8 +94,9 @@ createSpectraFromMzML <- function(path = ".", type = "") {
 #' @export
 #' 
 #' @examples
+#' path <- system.file("srm", package = "MsQualityUtils")
 #' createSpectraFromSrmOrMrmMzML(path = path)
-createSpectraFromSrmOrMrmMzML <- function(path = ".")
+createSpectraFromSrmOrMrmMzML <- function(path = ".") {
     
     fls <- dir(path, pattern = "[.]mzML", full.names = TRUE)
 

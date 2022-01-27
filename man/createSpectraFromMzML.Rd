@@ -4,10 +4,15 @@
 \alias{createSpectraFromMzML}
 \title{Create Spectra object from mzML files}
 \usage{
-createSpectraFromMzML(path = ".")
+createSpectraFromMzML(path = ".", type = "")
 }
 \arguments{
-\item{path}{\code{character}}
+\item{path}{\code{character}, path to mzML files}
+
+\item{type}{\code{character}, if \code{"SRM"} or \code{"MRM"} the mzML files
+will be loaded via \code{MSnbase::readSRMData}, otherwise the 
+mzML files will be loaded via \code{Spectra::Spectra} and the 
+\code{MsBackendMzR()}}
 }
 \value{
 \code{Spectra} object
@@ -17,13 +22,30 @@ The function \code{createSpectraFromMzML} creates a (single) \code{Spectra}
 object from all mzML files found in \code{path}.
 }
 \details{
-The package uses the \code{MsBackendMzR} for importing mzML files. The entries 
-in the returned \code{Spectra} object are separable by 
+The functions imports mzML files by either \code{Spectra::Spectra} and the
+\code{MsBackendMzR} backend or \code{MSnbase::readSRMData}. 
+The entries in the returned \code{Spectra} object are separable by 
 \code{Spectra$dataOrigin}.
+
+The \code{type} argument specifies the underlying technology of the 
+mzML files. Depending on the technology the quantitative information will 
+be stored in different lists within the mzML files. In case of 
+selected reaction monitoring (SRM)- or multiple reaction monitoring 
+(MRM)-derived files, the intensities and m/z values are stored in 
+\code{chromatogram} entries within \code{chromatogramList}. In this case,
+\code{type} has to be set to \code{"SRM"} or \code{"MRM"}. Typically, 
+the intensities and m/z values are stored in \code{spectrum} entries
+within \code{spectrumList}. In this case, \code{type} has to be set 
+to any other value than \code{"SRM"} or \code{"MRM"}.
 }
 \examples{
+## for non-SRM and non-MRM files
 path <- system.file("sciex", package = "msdata")
 createSpectraFromMzML(path = path)
+
+## for SRM and MRM files
+path <- system.file("srm", package = "MsQualityUtils")
+createSpectraFromMzML(path = path, type = "SRM")
 }
 \author{
 Thomas Naake

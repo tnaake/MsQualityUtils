@@ -20,6 +20,9 @@ object.
 The sample name (\code{colnames(se)}) is taken to create the 
 \code{dataOrigin} that is in down-stream functions used to distinguish the 
 origins of the resulting \code{Spectra}'s entries.
+
+The \code{Spectra} object only contains the the shared features between
+\code{se} and \code{rt}.
 }
 \examples{
 ## create rt object

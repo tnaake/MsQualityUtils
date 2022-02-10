@@ -16,16 +16,17 @@ The function \code{loadRt} loads the Retention_times_MetIDQ object stored in
 \code{Retention_times_MetIDQ} contains the retention time
 in seconds of the metabolites for the Biocrates MxP 500 Quant Kit measured 
 by the Metabolomics Core Technology Platorm, COS, University of Heidelberg
-(by Hagen Gegner).
-It will be used to create a \code{Spectra} list containing only the 
+(by Hagen Gegner). The mass spectrometry platform was a
+AB Sciex Triple Quad\code{^{TM}} 6500+ LC-MS/MS System.
+
+The object will be used to create a \code{Spectra} object containing only the 
 metabolites that were separated by liquid chromatography.
 }
 \details{
 Internal use in \code{createListOfSpectra}.
 }
 \examples{
-Retention_times_MetIDQ <- loadRt()
-
+rt <- loadRt()
 }
 \author{
 Thomas Naake

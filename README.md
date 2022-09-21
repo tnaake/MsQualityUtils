@@ -35,7 +35,7 @@ objects that store the (spectral) information of mzML or MetIDQ files.
 
 You are welcome to 
 
- * write a mail to <thomasnaake@googlemail.com> 
+ * write a mail to <thomasnaake (at) googlemail (dot) com> 
  * submit suggestions and issues: <https://github.com/tnaake/MsQualityUtils/issues>
  * send a pull request: <https://github.com/tnaake/MsQualityUtils/issues> 
 

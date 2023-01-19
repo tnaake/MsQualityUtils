@@ -51,7 +51,7 @@ loadRt <- function() {
 #' 
 #' @author Thomas Naake 
 #' 
-#' @importFrom MatrixQCvis biocrates
+#' @importFrom MatrixQCvisUtils biocrates
 #' 
 #' @export
 #' 
@@ -73,7 +73,7 @@ createListOfSummarizedExperimentFromMetIDQ <- function(path = "./",
     ## to the list
     for (i in seq_along(experiments)) {
         args <- list(file = experiments[i], sheet = sheet, ...)
-        se_l[[i]] <- do.call(MatrixQCvis::biocrates, args)
+        se_l[[i]] <- do.call(MatrixQCvisUtils::biocrates, args)
     }
     
     ## return the list

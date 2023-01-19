@@ -14,7 +14,7 @@ Description: MsQualityUtils enables to create MsExperiment objects from MetIDQ
 Depends:
 	R (>= 4.1.0)
 Imports:
-	MatrixQCvis (>= 1.3.2),
+	MatrixQCvisUtils (>= 0.99.99),
 	methods (>= 4.1.0),
 	MsExperiment (>= 0.6.1),
 	MSnbase (>= 2.20.4),
